@@ -1,12 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Manrope } from "next/font/google";
+import { Geist, Manrope } from "next/font/google";
 import "./globals.css";
 
-const serif = Instrument_Serif({
+const display = Geist({
   subsets: ["latin", "latin-ext"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -24,12 +22,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f4f1ea",
+  themeColor: "#f5f2ec",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="bs" className={`${serif.variable} ${sans.variable}`}>
+    <html lang="bs" className={`${display.variable} ${sans.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -1,5 +1,104 @@
 # Optika Loris — Design Notes
 
+> **V2 (30 Oct 2026)** — art-direction overhaul. The V2 notes come first; the original V1 research
+> (business facts, first reference pass) is kept below for the record.
+
+---
+
+## V2.1 Audit of V1 — what made it look like a template
+
+| Problem | Cause in code |
+| --- | --- |
+| Every heading looked tall, narrow and old-fashioned | Instrument Serif (`font-serif`) on 20 headings across 11 components, plus italic emphasis words in nearly every title |
+| Repetitive rhythm | The same recipe in every section: uppercase eyebrow → giant serif title → whitespace → image block → hairline |
+| Brands read like a text document | `Brands.tsx` printed brand names in the serif, separated by slashes |
+| Manifesto was a wall of type | One ~90px serif paragraph filling the viewport |
+| Hero lacked impact | Narrow serif headline beside a contained portrait with an overlapping inset — a portfolio pattern, not a campaign |
+| Eye care felt clinical | Close-up of phoropter equipment + bulleted medical copy |
+| Locations implied things that weren't true | Generic Sarajevo street photos framed as if they showed the stores |
+
+## V2.2 Reference research — techniques actually taken
+
+All four live sites were captured at 1440px with cookie banners dismissed and scrolled in 900px steps;
+Keron, Ornare and Wells & Vision were re-read from the supplied full-page shots.
+
+| Reference | Observed technique | How V2 uses it |
+| --- | --- | --- |
+| **Jimmy Fairly** | Full-bleed campaign photo with the nav overlaid in white; logo left, nav centred; category tiles 50/50 edge-to-edge, zero gutter, labels small in the bottom-left corner | Full-bleed B&W hero with transparent header that turns solid on scroll; logo-left / centred-nav header; edge-to-edge collection mosaic with corner labels |
+| **Ace & Tate** | Mixed grids where campaign photos sit next to flat packshot tiles; hairline cell borders; white pill buttons over images; macro crop of a single frame as a grid cell | Collection row mixing two campaign tiles with two real product tiles; 1px hairline grids (collections, products, brand grid); pill CTAs throughout |
+| **Cutler and Gross** | Cinematic campaign bands; macro "frame detail" band between product rows; product cards on one consistent backdrop | Full-bleed macro band ("Okvir se bira licem, ne katalogom."); all packshots on one warm tile colour |
+| **Cubitts** | Flat neutral product tiles, name left / price right on one line, small brand meta above | Product cards: brand meta top-left, model + price baseline row, alternate view on hover |
+| **Keron** | Clear relationship between campaign model and a featured product | Hero "U fokusu" card: the black Prada PRB23S next to a model in black rectangular sunglasses, opens quick-view |
+| **Ornare** | Image-led brand story instead of a paragraph; store moment as a strong single visual with a CTA | "Odabrano, ne nagomilano." story: photo-led split + close-up detail, short copy |
+| **Wells & Vision** | Parenthetical micro-labels "(Patient-first)", visible grid | Section indices "(01) Kolekcije" in sentence case replace the uppercase eyebrow pattern |
+
+## V2.3 Typography
+
+- **Geist** (display) — weight 500, tracking −0.03 to −0.045em, line-height 0.94–1.04.
+  Hero ≈ 95px at 1440, section titles ≈ 63px, card titles 17–36px.
+- **Manrope** (UI/body) — 15–17px body, 13px semibold labels.
+- Both loaded via `next/font` with the `latin-ext` subset (č, ć, š, ž, đ verified in renders).
+- No italics, no serif. The Loris wordmark (heavy italic sans, red "O") is the only expressive
+  letterform; the red full stop in the hero headline nods to it.
+
+## V2.4 Brand logos — provenance
+
+Official marks downloaded from Wikimedia Commons (`upload.wikimedia.org/wikipedia/commons/…`),
+checked for embedded scripts, and rendered as single-tone CSS masks (Ray-Ban therefore appears in its
+official one-colour form). Sizing uses the square root of each mark's aspect ratio so wide wordmarks
+and compact monograms carry similar visual weight.
+
+| Brand | Commons file |
+| --- | --- |
+| Prada | `Prada-Logo.svg` |
+| Miu Miu | `Miu_Miu_-_logo_(Italy,_1993).svg` |
+| Dolce&Gabbana | `Dolce_&_Gabbana.svg` |
+| Ray-Ban | `Ray-Ban_logo.svg` |
+| Jimmy Choo | `Jimmy_Choo_wordmark.svg` |
+| Emporio Armani | `Emporio_Armani_logo.svg` |
+| Carolina Herrera | `Carolina_Herrera_logo.svg` |
+| Chopard | `Logo_Chopard.svg` |
+
+**Omitted from the logo showcase:** Police, Furla, Missoni — files identified on Commons
+(`Police_(brand)_Logo.svg`, `Furla_logo_2019.svg`, `Missoni_logo.svg`) but Wikimedia rate-limited
+(HTTP 429) every download attempt from this environment. **Vogue Eyewear** — no verifiable official
+asset found. These brands appear only in a plain-text "Također u ponudi" line, never styled as logos.
+
+## V2.5 Section composition (deliberately varied)
+
+1. **Hero** — full-bleed B&W campaign, white Geist headline over a scrim, pill CTAs, floating product card.
+2. **Facts strip** — compact three-column line, not a section.
+3. **Kolekcije** — split header (title + category quick links), edge-to-edge campaign mosaic, then a mixed campaign/product row.
+4. **Naš pristup** — asymmetric photo-led story, followed by a full-bleed macro band.
+5. **Odabrano u studiju** — hairline boutique grid, underline filter tabs with counts.
+6. **Brendovi** — dark section; interactive logo grid drives a product spotlight (real model + price + quick-view + brand page).
+7. **Pregled vida** — 7/5 split: warm eye-chart photograph edge-to-edge, compact verified services, dark booking panel.
+8. **Poslovnice** — directory of the three verified stores driving a toned Google Maps embed of the selected address. No store photography is implied.
+9. **Footer** — dark, Geist sign-off, contact and disclaimer.
+
+## V2.6 New verified products (live check 30 Oct 2026)
+
+| Brand | Model | Price | Used in |
+| --- | --- | --- | --- |
+| Prada | PRB23S 16K08Z | 870,00 KM | Hero "U fokusu" |
+| Dolce&Gabbana | DG4514 501/87 | 545,00 KM | Brand spotlight |
+| Emporio Armani | EA4243 5001T3 | 310,00 KM | Collections tile, spotlight |
+| Carolina Herrera | HER 0186/S 80S | 289,50 KM (was 579,00) | Brand spotlight |
+| Chopard | 354 700 | 1.270,00 KM | Brand spotlight |
+
+All eight V1 grid products were re-checked the same day; prices unchanged.
+
+## V2.7 New editorial photography (Unsplash License)
+
+`1645561305502-63a9ba09ab09` (hero), `1701447428494-af7a13fc62e7` (studio shelf),
+`1616169863282-3b90a0982118` (macro frame band), `1517948430535-1e2469d314fe` (eye care).
+Removed: phoropter/optometrist equipment photos and the three Sarajevo city photos.
+
+---
+
+# V1 notes (29 Oct 2026)
+
+
 Independent redesign concept for [optikaloris.ba](https://optikaloris.ba/). Research was completed
 before any code was written; this document records what was observed and why the demo looks the
 way it does.

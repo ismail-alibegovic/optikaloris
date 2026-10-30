@@ -31,12 +31,10 @@ export function Footer() {
         <div className="grid gap-14 border-b border-ivory/15 pb-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Logo variant="light" className="h-12 w-auto" />
-            <p className="mt-10 max-w-[14ch] font-serif text-[clamp(2.5rem,4.6vw,4.25rem)] leading-[0.95]">
-              Vidimo se <em className="italic text-taupe">u studiju.</em>
-            </p>
+            <p className="type-section mt-10 max-w-[10ch]">Vidimo se u studiju.</p>
             <a
               href={BOOKING_URL}
-              className="mt-10 inline-flex h-12 items-center gap-2 bg-ivory px-7 text-[0.8125rem] font-semibold tracking-wide text-charcoal transition-colors hover:bg-cream"
+              className="mt-10 inline-flex h-12 items-center gap-2 rounded-full bg-ivory px-6 text-[0.875rem] font-semibold text-charcoal transition-colors hover:bg-white"
             >
               <span className="size-1.5 rounded-full bg-loris" aria-hidden />
               Zakaži pregled
@@ -46,7 +44,7 @@ export function Footer() {
           <nav aria-label="Podnožje" className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-7">
             {COLUMNS.map((col) => (
               <div key={col.title}>
-                <h2 className="eyebrow text-ivory/50">{col.title}</h2>
+                <h2 className="type-label text-ivory/45">{col.title}</h2>
                 <ul className="mt-6 space-y-3 text-[0.9375rem]">
                   {col.links.map((l) => (
                     <li key={l.label}>
@@ -59,7 +57,7 @@ export function Footer() {
               </div>
             ))}
             <div className="col-span-2 sm:col-span-1">
-              <h2 className="eyebrow text-ivory/50">Kontakt</h2>
+              <h2 className="type-label text-ivory/45">Kontakt</h2>
               <ul className="mt-6 space-y-3 text-[0.9375rem] text-ivory/85">
                 <li>
                   <a href={CONTACT.phoneHref} className="hover:text-ivory">{CONTACT.phone}</a>

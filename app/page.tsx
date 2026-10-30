@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Collections } from "@/components/Collections";
-import { Manifesto } from "@/components/Manifesto";
+import { Studio } from "@/components/Studio";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { Brands } from "@/components/Brands";
 import { Services } from "@/components/Services";
@@ -16,7 +16,7 @@ export default function Home() {
       <main id="sadrzaj">
         <Hero />
         <Collections />
-        <Manifesto />
+        <Studio />
         <FeaturedProducts />
         <Brands />
         <Services />

@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight, Plus } from "lucide-react";
 import { Reveal } from "./Reveal";
-import { ArrowLink } from "./ArrowLink";
 import { useQuickView } from "./QuickViewContext";
 import {
   PRICES_VERIFIED_ON,
   PRODUCTS,
+  SHOP_URL,
   collectionUrl,
   formatKM,
   productImage,
@@ -18,30 +19,43 @@ import {
 
 type Filter = "sve" | Category;
 
-const FILTERS: { id: Filter; label: string; href: string }[] = [
-  { id: "sve", label: "Sve", href: "https://optikaloris.ba/collections/all" },
-  { id: "suncane", label: "Sunčane", href: collectionUrl("suncane-naocale") },
-  { id: "dioptrijske", label: "Dioptrijske", href: collectionUrl("dioptrijski-okviri") },
+const FILTERS: { id: Filter; label: string; href: string; linkLabel: string }[] = [
+  { id: "sve", label: "Sve", href: `${SHOP_URL}/collections/all`, linkLabel: "Cijela ponuda" },
+  { id: "suncane", label: "Sunčane", href: collectionUrl("suncane-naocale"), linkLabel: "Sve sunčane naočale" },
+  { id: "dioptrijske", label: "Dioptrijske", href: collectionUrl("dioptrijski-okviri"), linkLabel: "Svi dioptrijski okviri" },
 ];
+
+const countFor = (f: Filter) => (f === "sve" ? PRODUCTS.length : PRODUCTS.filter((p) => p.category === f).length);
 
 function ProductCard({ product, priority }: { product: Product; priority?: boolean }) {
   const { open } = useQuickView();
-  const [front, side] = [product.images[0], product.images[1]];
+  const [front, side] = product.images;
   return (
-    <article className="group">
-      <button
-        type="button"
-        onClick={() => open(product)}
-        className="relative block aspect-[4/5] w-full sm:aspect-square overflow-hidden bg-cream text-left"
-        aria-label={`Brzi pregled: ${product.brand} ${product.model}, ${formatKM(product.price)}`}
-      >
+    <button
+      type="button"
+      onClick={() => open(product)}
+      className="group flex h-full w-full flex-col bg-tile p-4 text-left transition-colors duration-500 hover:bg-cream sm:p-6"
+      aria-label={`Brzi pregled: ${product.brand} ${product.model}, ${formatKM(product.price)}`}
+    >
+      <span className="flex items-start justify-between gap-3">
+        <span className="text-[0.75rem] font-semibold text-stone">{product.brand}</span>
+        {product.compareAtPrice ? (
+          <span className="type-micro !text-[0.625rem] text-loris">Akcija</span>
+        ) : (
+          <span className="inline-flex size-7 items-center justify-center rounded-full border border-charcoal/15 opacity-0 transition-all duration-300 group-hover:border-charcoal group-hover:bg-charcoal group-hover:text-ivory group-hover:opacity-100 group-focus-visible:opacity-100">
+            <Plus className="size-3.5" strokeWidth={1.75} aria-hidden />
+          </span>
+        )}
+      </span>
+
+      <span className="relative my-6 block aspect-[5/4] w-full sm:my-10">
         <Image
           src={productImage(front)}
           alt=""
           fill
           priority={priority}
           sizes="(min-width: 1024px) 24vw, 50vw"
-          className={`packshot object-contain px-4 transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] sm:px-6 ${
+          className={`packshot object-contain transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] ${
             side ? "group-hover:opacity-0" : "group-hover:scale-105"
           }`}
         />
@@ -51,31 +65,21 @@ function ProductCard({ product, priority }: { product: Product; priority?: boole
             alt=""
             fill
             sizes="(min-width: 1024px) 24vw, 50vw"
-            className="packshot scale-95 object-contain px-4 opacity-0 transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] group-hover:scale-100 group-hover:opacity-100 sm:px-6"
+            className="packshot scale-95 object-contain opacity-0 transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] group-hover:scale-100 group-hover:opacity-100"
           />
         )}
-        {product.compareAtPrice && (
-          <span className="eyebrow absolute left-3 top-3 bg-ivory px-2 py-1 !text-[0.625rem] text-loris sm:left-4 sm:top-4">
-            Akcija
-          </span>
-        )}
-        <span className="absolute inset-x-3 bottom-3 flex h-10 translate-y-2 items-center justify-center bg-ivory/95 text-xs font-semibold tracking-wide opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 sm:inset-x-4 sm:bottom-4">
-          Brzi pregled
-        </span>
-      </button>
-      <div className="mt-4 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-        <div>
-          <p className="eyebrow !text-[0.625rem] text-taupe">{product.brand}</p>
-          <h3 className="mt-1.5 text-[0.9375rem] font-medium">{product.model}</h3>
-        </div>
-        <p className="text-[0.9375rem] sm:text-right">
-          {formatKM(product.price)}
+      </span>
+
+      <span className="mt-auto flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
+        <span className="type-card text-[0.9375rem] sm:text-[1.0625rem]">{product.model}</span>
+        <span className="shrink-0 whitespace-nowrap text-[0.875rem] tabular-nums text-ink sm:text-right">
           {product.compareAtPrice && (
-            <span className="block text-xs text-ink/50 line-through">{formatKM(product.compareAtPrice)}</span>
+            <span className="mr-2 text-[0.75rem] text-ink/45 line-through sm:mr-0 sm:block">{formatKM(product.compareAtPrice)}</span>
           )}
-        </p>
-      </div>
-    </article>
+          {formatKM(product.price)}
+        </span>
+      </span>
+    </button>
   );
 }
 
@@ -93,50 +97,53 @@ export function FeaturedProducts() {
   const active = FILTERS.find((f) => f.id === filter)!;
 
   return (
-    <section id="izdvojeno" aria-labelledby="izdvojeno-title" className="py-24 md:py-36">
+    <section id="izdvojeno" aria-labelledby="izdvojeno-title" className="py-24 md:py-32">
       <div className="container-editorial">
-        <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
-          <Reveal>
-            <p className="eyebrow text-olive">Izdvojeno iz ponude</p>
-            <h2 id="izdvojeno-title" className="mt-6 font-serif text-[clamp(2.75rem,6vw,5.5rem)] leading-[0.95] tracking-[-0.01em]">
-              Odabrano <em className="italic">u studiju.</em>
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <Reveal className="lg:col-span-7">
+            <p className="type-label text-stone">(03) Izdvojeno iz ponude</p>
+            <h2 id="izdvojeno-title" className="type-section mt-4">
+              Odabrano u studiju.
             </h2>
           </Reveal>
-
-          <Reveal delay={0.1} className="flex flex-col items-start gap-6 md:items-end">
-            <div role="group" aria-label="Filtriraj proizvode" className="flex border border-charcoal/15 p-1">
+          <Reveal delay={0.1} className="lg:col-span-5 lg:justify-self-end">
+            <div role="group" aria-label="Filtriraj proizvode" className="flex gap-7">
               {FILTERS.map((f) => (
                 <button
                   key={f.id}
                   type="button"
                   aria-pressed={filter === f.id}
                   onClick={() => setFilter(f.id)}
-                  className="relative h-10 px-5 text-[0.8125rem] font-semibold tracking-wide transition-colors duration-300 aria-pressed:text-ivory sm:px-6"
+                  className="relative pb-2 text-[0.9375rem] font-semibold text-charcoal/45 transition-colors duration-300 hover:text-charcoal aria-pressed:text-charcoal"
                 >
+                  {f.label}
+                  <sup className="ml-1 text-[0.625rem] font-semibold">{countFor(f.id)}</sup>
                   {filter === f.id && (
                     <motion.span
-                      layoutId="filter-pill"
-                      className="absolute inset-0 bg-charcoal"
+                      layoutId="filter-underline"
+                      className="absolute inset-x-0 bottom-0 h-px bg-charcoal"
                       transition={{ duration: reduce ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
                     />
                   )}
-                  <span className="relative">{f.label}</span>
                 </button>
               ))}
             </div>
           </Reveal>
         </div>
 
-        <motion.ul layout={!reduce} className="mt-14 grid grid-cols-2 gap-x-3 gap-y-12 sm:gap-x-6 md:mt-20 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16">
+        <motion.ul
+          layout={!reduce}
+          className="mt-12 grid grid-cols-2 gap-px border border-charcoal/10 bg-charcoal/10 md:mt-16 lg:grid-cols-4"
+        >
           <AnimatePresence mode="popLayout" initial={false}>
             {visible.map((product, i) => (
               <motion.li
                 key={product.handle}
                 layout={!reduce}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : i * 0.03, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ProductCard product={product} priority={i < 2} />
               </motion.li>
@@ -144,11 +151,18 @@ export function FeaturedProducts() {
           </AnimatePresence>
         </motion.ul>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-charcoal/10 pt-6 text-[0.8125rem] text-ink/70 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-4 text-[0.8125rem] text-ink/65 sm:flex-row sm:items-center sm:justify-between">
           <p>Cijene preuzete s optikaloris.ba, {PRICES_VERIFIED_ON}</p>
-          <ArrowLink href={active.href} external className="text-charcoal">
-            {filter === "sve" ? "Pogledaj cijelu ponudu" : `Sve ${active.label.toLowerCase()} naočale`}
-          </ArrowLink>
+          <a
+            href={active.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 font-semibold text-charcoal"
+          >
+            <span className="link-underline">{active.linkLabel} na optikaloris.ba</span>
+            <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.5} aria-hidden />
+            <span className="sr-only">(otvara se u novom prozoru)</span>
+          </a>
         </div>
       </div>
     </section>

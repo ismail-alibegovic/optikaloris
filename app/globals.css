@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ivory: #f4f1ea;
-  --color-cream: #e9e2d6;
+  --color-ivory: #f5f2ec;
+  --color-cream: #ebe5db;
+  --color-tile: #eeeae3;
   --color-sand: #ddd3c3;
-  --color-parchment: #eee8de;
-  --color-charcoal: #22211e;
+  --color-parchment: #efe9df;
+  --color-charcoal: #1f1e1b;
   --color-ink: #3a3833;
+  --color-stone: #8a8378;
   --color-taupe: #b5a48f;
   --color-olive: #6e735c;
   --color-loris: #d0021b;
 
-  --font-serif: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-display: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
@@ -28,6 +30,7 @@
     background-color: var(--color-ivory);
     color: var(--color-charcoal);
     font-family: var(--font-sans);
+    font-size: 1rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -66,20 +69,64 @@
     padding-inline: 2.5rem;
   }
   @media (width >= 80rem) {
-    padding-inline: 4rem;
+    padding-inline: 3.5rem;
   }
 }
 
-/* Small uppercase label used for eyebrows and captions */
-@utility eyebrow {
+/*
+ * Type scale — Geist for display, Manrope for everything else.
+ * Expression comes from scale and composition, not ornament.
+ */
+@utility type-hero {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 6.6vw, 6.25rem);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+
+@utility type-section {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.375rem, 4.4vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+@utility type-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.625rem, 2.4vw, 2.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+@utility type-card {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+/* Small label: sentence case, used for section indices like "(02) Kolekcije" */
+@utility type-label {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+/* Micro caps — used sparingly (badges, tiny meta) */
+@utility type-micro {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-/* Underline that draws in on hover */
+/* Underline that draws out on hover */
 @utility link-underline {
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 100% 1px;
@@ -93,7 +140,31 @@
   }
 }
 
-/* Packshots on white are blended onto the cream tiles */
+/* Packshots on white are blended onto the warm tiles */
 @utility packshot {
   mix-blend-mode: multiply;
+}
+
+/* Brand logos are rendered as single-colour silhouettes so every mark shares one tone */
+@utility brand-mark {
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+@keyframes hero-settle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@utility animate-hero-settle {
+  animation: hero-settle 2.6s var(--ease-editorial) both;
 }

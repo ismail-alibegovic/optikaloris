@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, X } from "lucide-react";
+import { BrandMark } from "./BrandMark";
 import {
   BOOKING_URL,
+  BRAND_SHOWCASE,
   PRICES_VERIFIED_ON,
   formatKM,
   productImage,
@@ -16,6 +18,7 @@ import {
 const CATEGORY_LABEL = { suncane: "Sunčane naočale", dioptrijske: "Dioptrijski okvir" } as const;
 
 export function QuickView({ product, onClose }: { product: Product | null; onClose: () => void }) {
+  const logo = product ? BRAND_SHOWCASE.find((b) => b.name === product.brand) : undefined;
   const [active, setActive] = useState(0);
   const dialog = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -84,17 +87,17 @@ export function QuickView({ product, onClose }: { product: Product | null; onClo
               type="button"
               onClick={onClose}
               aria-label="Zatvori"
-              className="absolute right-3 top-3 z-10 inline-flex size-10 items-center justify-center bg-ivory/80 transition-colors hover:bg-charcoal hover:text-ivory"
+              className="absolute right-3 top-3 z-10 inline-flex size-10 items-center justify-center rounded-full bg-ivory/90 transition-colors hover:bg-charcoal hover:text-ivory"
             >
               <X className="size-5" strokeWidth={1.5} />
             </button>
 
-            <div className="flex flex-col bg-cream">
+            <div className="flex flex-col bg-tile">
               <div className="relative aspect-[5/4] w-full">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={product.images[active]}
-                    className="absolute inset-0"
+                    className="absolute inset-0 bg-tile"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -132,20 +135,27 @@ export function QuickView({ product, onClose }: { product: Product | null; onClo
 
             <div className="flex flex-col gap-8 p-6 sm:p-10">
               <div>
-                <p className="eyebrow text-olive">{CATEGORY_LABEL[product.category]}</p>
-                <h2 id="quickview-title" className="mt-4 font-serif text-[2.75rem] leading-[0.95]">
-                  {product.brand}
+                <p className="type-label text-stone">{CATEGORY_LABEL[product.category]}</p>
+                {logo ? (
+                  <div className="mt-6 flex h-10 items-center">
+                    <BrandMark name={product.brand} logo={logo.logo} ratio={logo.ratio} height={24} className="text-charcoal" />
+                  </div>
+                ) : (
+                  <p className="mt-5 text-[0.9375rem] font-semibold text-ink">{product.brand}</p>
+                )}
+                <h2 id="quickview-title" className="type-section mt-3 !text-[clamp(2rem,3.2vw,2.75rem)]">
+                  <span className="sr-only">{product.brand} </span>
+                  {product.model}
                 </h2>
-                <p className="mt-2 text-sm tracking-wide text-ink">{product.model}</p>
-                {product.note && <p className="mt-4 font-serif text-xl italic text-ink">{product.note}</p>}
+                {product.note && <p className="mt-4 text-[0.9375rem] text-ink/75">„{product.note}“</p>}
               </div>
 
               <div className="flex items-baseline gap-3">
-                <span className="text-2xl font-medium">{formatKM(product.price)}</span>
+                <span className="font-display text-2xl font-medium tracking-[-0.02em]">{formatKM(product.price)}</span>
                 {product.compareAtPrice && (
                   <>
-                    <span className="text-sm text-ink/60 line-through">{formatKM(product.compareAtPrice)}</span>
-                    <span className="eyebrow text-loris">Akcija</span>
+                    <span className="text-sm text-ink/55 line-through">{formatKM(product.compareAtPrice)}</span>
+                    <span className="type-micro text-loris">Akcija</span>
                   </>
                 )}
               </div>
@@ -161,10 +171,12 @@ export function QuickView({ product, onClose }: { product: Product | null; onClo
                   <dt className="text-ink/70">Veličina</dt>
                   <dd>{product.size}</dd>
                 </div>
-                <div className="flex justify-between py-3">
-                  <dt className="text-ink/70">Proba</dt>
-                  <dd>U sve tri poslovnice</dd>
-                </div>
+                {product.category === "dioptrijske" && (
+                  <div className="flex justify-between gap-6 py-3">
+                    <dt className="text-ink/70">Pregled vida</dt>
+                    <dd className="text-right">Besplatan uz kupovinu okvira ili stakala</dd>
+                  </div>
+                )}
               </dl>
 
               <div className="mt-auto flex flex-col gap-3">
@@ -172,7 +184,7 @@ export function QuickView({ product, onClose }: { product: Product | null; onClo
                   href={productUrl(product)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex h-12 items-center justify-center gap-2 bg-charcoal px-6 text-[0.8125rem] font-semibold tracking-wide text-ivory transition-colors hover:bg-ink"
+                  className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-charcoal px-6 text-[0.875rem] font-semibold text-ivory transition-colors hover:bg-ink"
                 >
                   Pogledaj na optikaloris.ba
                   <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.5} aria-hidden />
@@ -180,7 +192,7 @@ export function QuickView({ product, onClose }: { product: Product | null; onClo
                 </a>
                 <a
                   href={BOOKING_URL}
-                  className="inline-flex h-12 items-center justify-center border border-charcoal/30 px-6 text-[0.8125rem] font-semibold tracking-wide transition-colors hover:border-charcoal"
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-charcoal/25 px-6 text-[0.875rem] font-semibold transition-colors hover:border-charcoal"
                 >
                   Zakaži pregled vida
                 </a>

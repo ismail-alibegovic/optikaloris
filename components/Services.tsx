@@ -1,12 +1,12 @@
 import Image from "next/image";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
-import { ButtonLink, ArrowLink } from "./ArrowLink";
 import { BOOKING_URL, collectionUrl } from "@/lib/data";
 
 const SERVICES = [
   {
-    title: "Optometrijski pregled",
-    text: "Određivanje i kontrola dioptrije u poslovnici, uz termin koji rezervišete online.",
+    title: "Određivanje i kontrola dioptrije",
+    text: "Optometrijski pregled u poslovnici, u terminu koji rezervišete online.",
   },
   {
     title: "Besplatno uz kupovinu",
@@ -14,82 +14,73 @@ const SERVICES = [
   },
   {
     title: "Kontaktne leće i otopine",
-    text: "Dnevne, mjesečne i tromjesečne leće te otopine vodećih proizvođača — Alcon, Bausch+Lomb, Johnson&Johnson.",
+    text: "Dnevne, mjesečne i tromjesečne leće — Alcon, Bausch+Lomb, Johnson&Johnson.",
     href: collectionUrl("lece-i-otopine"),
-  },
-  {
-    title: "Savjet pri odabiru",
-    text: "Okvir biramo zajedno s vama: prema obliku lica, dioptriji i načinu na koji ga nosite.",
   },
 ];
 
 export function Services() {
   return (
-    <section id="pregled" aria-labelledby="pregled-title" className="py-24 md:py-36">
-      <div className="container-editorial grid gap-16 lg:grid-cols-12 lg:gap-10">
-        {/* Image pair */}
-        <div className="relative lg:col-span-6">
-          <Reveal className="relative aspect-[4/5] w-[86%] overflow-hidden bg-cream">
-            <Image
-              src="/images/editorial/service-phoropter.jpg"
-              alt="Pacijentica tokom pregleda vida kroz foropter"
-              fill
-              sizes="(min-width: 1024px) 40vw, 86vw"
-              className="object-cover object-[50%_40%]"
-            />
-          </Reveal>
-          <Reveal
-            delay={0.15}
-            y={40}
-            className="absolute bottom-[-3rem] right-0 aspect-[4/5] w-[42%] overflow-hidden border-[6px] border-ivory bg-cream"
-          >
-            <Image
-              src="/images/editorial/service-optometrist.jpg"
-              alt="Optometrist podešava foropter, crno-bijela fotografija"
-              fill
-              sizes="(min-width: 1024px) 20vw, 42vw"
-              className="object-cover grayscale"
-            />
-          </Reveal>
+    <section id="pregled" aria-labelledby="pregled-title" className="bg-parchment">
+      <div className="grid lg:grid-cols-12">
+        <div className="relative aspect-[4/3] overflow-hidden bg-cream lg:col-span-7 lg:aspect-auto lg:min-h-[46rem]">
+          <Image
+            src="/images/editorial/care-chart.jpg"
+            alt="Naočale podignute ispred tablice za provjeru vida"
+            fill
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            className="object-cover object-[50%_45%]"
+          />
+          <span className="type-label absolute left-5 top-5 rounded-full bg-ivory/90 px-3 py-1.5 text-charcoal md:left-8 md:top-8">
+            (05) Pregled vida
+          </span>
         </div>
 
-        {/* Copy */}
-        <div className="flex flex-col pt-8 lg:col-span-5 lg:col-start-8 lg:pt-0">
+        <div className="flex flex-col justify-between gap-12 px-5 py-14 md:px-10 md:py-20 lg:col-span-5 lg:px-12 xl:px-16">
           <Reveal>
-            <p className="eyebrow flex items-center gap-3 text-olive">
-              <span className="size-1.5 rounded-full bg-loris" aria-hidden />
-              Pregled vida
-            </p>
-            <h2 id="pregled-title" className="mt-6 font-serif text-[clamp(2.75rem,5.2vw,5rem)] leading-[0.95] tracking-[-0.01em]">
-              Vaš vid zaslužuje <em className="italic">posebnu pažnju.</em>
+            <h2 id="pregled-title" className="type-section max-w-[13ch]">
+              Vaš vid zaslužuje posebnu pažnju.
             </h2>
+            <ul className="mt-10 border-t border-charcoal/15">
+              {SERVICES.map((s) => (
+                <li key={s.title} className="border-b border-charcoal/15 py-5">
+                  <h3 className="type-card">{s.title}</h3>
+                  <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-ink/75">{s.text}</p>
+                  {s.href && (
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group mt-2 inline-flex items-center gap-1 text-[0.8125rem] font-semibold"
+                    >
+                      <span className="link-underline">Pogledaj leće i otopine</span>
+                      <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden />
+                      <span className="sr-only">(otvara se u novom prozoru)</span>
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
           </Reveal>
 
-          <ol className="mt-12 border-t border-charcoal/15">
-            {SERVICES.map((s, i) => (
-              <Reveal as="li" key={s.title} delay={0.05 * i} className="grid grid-cols-[3rem_1fr] gap-x-4 border-b border-charcoal/15 py-6">
-                <span className="eyebrow pt-1 text-taupe">0{i + 1}</span>
-                <div>
-                  <h3 className="text-[1.0625rem] font-semibold">{s.title}</h3>
-                  <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink/80">{s.text}</p>
-                  {s.href && (
-                    <ArrowLink href={s.href} external className="mt-3">
-                      Leće i otopine
-                    </ArrowLink>
-                  )}
-                </div>
-              </Reveal>
-            ))}
-          </ol>
-
-          <Reveal delay={0.2} className="mt-12 flex flex-col gap-6 bg-cream p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-            <div>
-              <p className="font-serif text-2xl leading-tight">Rezervišite termin online</p>
-              <p className="mt-1 text-[0.8125rem] text-ink/70">Termini od 09:30 do 19:30 · tri poslovnice</p>
+          <Reveal delay={0.12}>
+            <div className="bg-charcoal p-6 text-ivory sm:p-8">
+              <p className="type-label flex items-center gap-2 text-ivory/60">
+                <span className="size-1.5 rounded-full bg-loris" aria-hidden />
+                Online rezervacija
+              </p>
+              <p className="type-title mt-4">Odaberite poslovnicu i termin.</p>
+              <p className="mt-2 text-[0.875rem] text-ivory/65">Termini od 09:30 do 19:30 · Grbavica, Aria Mall, Bingo City Centar</p>
+              <a
+                href={BOOKING_URL}
+                className="group mt-7 flex h-13 w-full items-center justify-between rounded-full bg-ivory py-3.5 pl-6 pr-2 text-[0.9375rem] font-semibold text-charcoal transition-colors hover:bg-white"
+              >
+                Zakaži pregled
+                <span className="inline-flex size-9 items-center justify-center rounded-full bg-charcoal text-ivory transition-transform duration-500 group-hover:translate-x-0.5">
+                  <ArrowRight className="size-4" strokeWidth={1.75} aria-hidden />
+                </span>
+              </a>
             </div>
-            <ButtonLink href={BOOKING_URL} className="shrink-0">
-              Zakaži pregled
-            </ButtonLink>
           </Reveal>
         </div>
       </div>

@@ -27,7 +27,7 @@ export function Header() {
   const firstLink = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -48,6 +48,9 @@ export function Header() {
     };
   }, [open]);
 
+  // Over the hero the header is transparent and light; once scrolled it becomes a solid ivory bar.
+  const light = !scrolled;
+
   return (
     <>
       <a
@@ -57,60 +60,72 @@ export function Header() {
         Preskoči na sadržaj
       </a>
 
-      <div className="bg-charcoal text-ivory">
-        <div className="container-editorial flex h-9 items-center justify-center gap-2 text-center text-[0.6875rem] tracking-[0.08em] sm:text-xs">
-          <span className="hidden sm:inline">Pregled vida je besplatan uz kupovinu okvira ili stakala.</span>
-          <span className="sm:hidden">Besplatan pregled uz kupovinu.</span>
-          <a href={BOOKING_URL} className="font-semibold underline decoration-ivory/40 underline-offset-4 hover:decoration-ivory">
-            Rezervišite termin
-          </a>
-        </div>
-      </div>
-
       <header
-        className={`sticky top-0 z-50 transition-[background-color,border-color] duration-500 ${
-          scrolled ? "border-b border-charcoal/10 bg-ivory/90 backdrop-blur-md" : "border-b border-transparent bg-ivory"
+        className={`fixed inset-x-0 top-0 z-50 transition-[background-color,color,border-color] duration-500 ${
+          light ? "border-b border-transparent text-ivory" : "border-b border-charcoal/10 bg-ivory/95 text-charcoal backdrop-blur-md"
         }`}
       >
-        <div className="container-editorial grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-6 lg:h-20 lg:grid-cols-[auto_1fr_auto]">
-          <button
-            ref={menuButton}
-            type="button"
-            className="-ml-2 inline-flex size-10 items-center justify-center lg:hidden"
-            aria-label="Otvori meni"
-            aria-expanded={open}
-            aria-controls="mobilni-meni"
-            onClick={() => setOpen(true)}
-          >
-            <Menu className="size-5" strokeWidth={1.5} />
-          </button>
+        <div
+          className={`overflow-hidden bg-charcoal text-ivory transition-[height] duration-500 ease-[var(--ease-editorial)] ${
+            scrolled ? "h-0" : "h-9"
+          }`}
+        >
+          <div className="container-editorial flex h-9 items-center justify-center gap-2 text-center text-[0.75rem] tracking-[0.01em]">
+            <span className="hidden sm:inline">Pregled vida je besplatan uz kupovinu okvira ili stakala.</span>
+            <span className="sm:hidden">Besplatan pregled uz kupovinu.</span>
+            <a href={BOOKING_URL} className="font-semibold underline decoration-ivory/40 underline-offset-4 hover:decoration-ivory">
+              Rezervišite termin
+            </a>
+          </div>
+        </div>
 
-          <a href="#" className="justify-self-center lg:justify-self-start" aria-label="Optika Loris — početna">
-            <Logo className="h-8 w-auto lg:h-10" />
+        <div className="container-editorial grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-6 lg:h-[4.5rem] lg:grid-cols-[auto_1fr_auto]">
+          <div className="flex items-center lg:hidden">
+            <button
+              ref={menuButton}
+              type="button"
+              className="-ml-2 inline-flex size-10 items-center justify-center lg:hidden"
+              aria-label="Otvori meni"
+              aria-expanded={open}
+              aria-controls="mobilni-meni"
+              onClick={() => setOpen(true)}
+            >
+              <Menu className="size-5" strokeWidth={1.5} />
+            </button>
+          </div>
+
+          <a href="#" className="relative block h-9 w-[96px] justify-self-center lg:h-11 lg:w-[118px] lg:justify-self-start" aria-label="Optika Loris — početna">
+            <Logo variant="light" className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-500 ${light ? "opacity-100" : "opacity-0"}`} />
+            <Logo variant="dark" decorative className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-500 ${light ? "opacity-0" : "opacity-100"}`} />
           </a>
 
           <nav aria-label="Glavna navigacija" className="hidden justify-self-center lg:block">
-            <ul className="flex items-center gap-10 text-[0.8125rem] font-medium tracking-wide">
-              {NAV.map((item) => (
-                <li key={item.label}>
-                  <a href={item.href} onClick={() => selectFilter(item.filter)} className="relative py-2 text-ink transition-colors hover:text-charcoal">
-                    <span className="link-underline [background-size:0%_1px] hover:[background-size:100%_1px]">{item.label}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+              <ul className="flex items-center gap-8 text-[0.8125rem] font-semibold tracking-[0.01em]">
+                {NAV.map((item) => (
+                  <li key={item.label}>
+                    <a href={item.href} onClick={() => selectFilter(item.filter)} className="py-2 opacity-90 transition-opacity hover:opacity-100">
+                      <span className="link-underline [background-size:0%_1px] hover:[background-size:100%_1px]">{item.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-          <div className="flex items-center justify-self-end">
+          <div className="flex items-center justify-self-end gap-6">
+            <a href="#pregled" className="hidden py-2 text-[0.8125rem] font-semibold opacity-90 hover:opacity-100 xl:inline">
+              Pregled vida
+            </a>
             <a
               href={BOOKING_URL}
-              className="group hidden h-11 items-center gap-2 border border-charcoal px-5 text-[0.8125rem] font-semibold tracking-wide transition-colors duration-300 hover:bg-charcoal hover:text-ivory sm:inline-flex"
+              className={`hidden h-10 items-center gap-2 rounded-full px-5 text-[0.8125rem] font-semibold transition-colors duration-300 sm:inline-flex ${
+                light ? "bg-ivory text-charcoal hover:bg-white" : "bg-charcoal text-ivory hover:bg-ink"
+              }`}
             >
               <span className="size-1.5 rounded-full bg-loris" aria-hidden />
               Zakaži pregled
             </a>
-            <a href={BOOKING_URL} className="inline-flex size-10 items-center justify-center sm:hidden" aria-label="Zakaži pregled">
-              <span className="eyebrow !text-[0.625rem]">Termin</span>
+            <a href={BOOKING_URL} className="text-[0.8125rem] font-semibold sm:hidden" aria-label="Zakaži pregled">
+              Termin
             </a>
           </div>
         </div>
@@ -129,19 +144,20 @@ export function Header() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
           >
-            <div className="container-editorial flex h-16 items-center justify-between">
-              <Logo className="h-8 w-auto" />
+            <div className="container-editorial grid h-16 grid-cols-[1fr_auto_1fr] items-center">
+              <span />
+              <Logo className="h-9 w-auto" decorative />
               <button
                 type="button"
-                className="-mr-2 inline-flex size-10 items-center justify-center"
+                className="-mr-2 inline-flex size-10 items-center justify-center justify-self-end"
                 aria-label="Zatvori meni"
                 onClick={() => setOpen(false)}
               >
                 <X className="size-5" strokeWidth={1.5} />
               </button>
             </div>
-            <nav aria-label="Mobilna navigacija" className="container-editorial flex flex-1 flex-col justify-between pb-10 pt-8">
-              <ul className="space-y-1">
+            <nav aria-label="Mobilna navigacija" className="container-editorial flex flex-1 flex-col justify-between pb-10 pt-6">
+              <ul>
                 {[...NAV, { label: "Pregled vida", href: "#pregled" } as NavItem].map((item, i) => (
                   <motion.li
                     key={item.label}
@@ -156,10 +172,10 @@ export function Header() {
                         selectFilter(item.filter);
                         setOpen(false);
                       }}
-                      className="flex items-baseline gap-4 border-b border-charcoal/10 py-4 font-serif text-[2.5rem] leading-none"
+                      className="flex items-baseline justify-between border-b border-charcoal/10 py-5 font-display text-[2rem] font-medium leading-none tracking-[-0.035em]"
                     >
-                      <span className="eyebrow text-taupe">0{i + 1}</span>
                       {item.label}
+                      <span className="type-label text-stone">0{i + 1}</span>
                     </a>
                   </motion.li>
                 ))}
@@ -167,7 +183,7 @@ export function Header() {
               <div className="space-y-6">
                 <a
                   href={BOOKING_URL}
-                  className="flex h-14 w-full items-center justify-center gap-2 bg-charcoal text-sm font-semibold tracking-wide text-ivory"
+                  className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-charcoal text-sm font-semibold text-ivory"
                 >
                   <span className="size-1.5 rounded-full bg-loris" aria-hidden />
                   Zakaži pregled

@@ -1,20 +1,13 @@
-// All business facts and products below were verified on optikaloris.ba on 29 Oct 2026.
+// All business facts and products below were verified on optikaloris.ba (last check: 30 Oct 2026).
 
 export const SHOP_URL = "https://optikaloris.ba";
 export const BOOKING_URL = `${SHOP_URL}/pages/rezervacija`;
 export const CONTACT_URL = `${SHOP_URL}/pages/contact`;
-export const PRICES_VERIFIED_ON = "29. 10. 2026.";
+export const PRICES_VERIFIED_ON = "30. 10. 2026.";
 
 export const collectionUrl = (handle: string) => `${SHOP_URL}/collections/${handle}`;
 export const vendorUrl = (vendor: string) =>
   `${SHOP_URL}/collections/vendors?q=${encodeURIComponent(vendor)}`;
-
-export const NAV_LINKS = [
-  { label: "Sunčane naočale", href: "#kolekcije" },
-  { label: "Dioptrijski okviri", href: "#izdvojeno" },
-  { label: "Brendovi", href: "#brendovi" },
-  { label: "Poslovnice", href: "#poslovnice" },
-] as const;
 
 export type Category = "suncane" | "dioptrijske";
 
@@ -122,30 +115,101 @@ export const formatKM = (value: number) => {
   return `${int.replace(/\B(?=(\d{3})+(?!\d))/g, ".")},${dec} KM`;
 };
 
-export const BRAND_GROUPS = [
+// Products shown only in the hero and the brand spotlight (not in the curated grid).
+export const EXTRA_PRODUCTS: Product[] = [
   {
-    title: "Modne kuće",
-    brands: [
-      "Prada",
-      "Miu Miu",
-      "Dolce&Gabbana",
-      "Jimmy Choo",
-      "Emporio Armani",
-      "Carolina Herrera",
-      "Chopard",
-      "Missoni",
-      "Furla",
-    ],
+    handle: "prada-prb23s-16k08z",
+    brand: "Prada",
+    model: "PRB23S 16K08Z",
+    category: "suncane",
+    price: 870,
+    color: "Crna",
+    size: "54-20-145",
+    images: ["prada-prb23s-16k08z-1.jpg", "prada-prb23s-16k08z-2.jpg"],
   },
   {
-    title: "Ikone",
-    brands: ["Ray-Ban", "Police", "Vogue"],
+    handle: "dolce-gabbana-dg4514-501-87",
+    brand: "Dolce&Gabbana",
+    model: "DG4514 501/87",
+    category: "suncane",
+    price: 545,
+    color: "Crna",
+    size: "55-17-145",
+    images: ["dolce-gabbana-dg4514-501-87-1.jpg", "dolce-gabbana-dg4514-501-87-2.jpg"],
   },
   {
-    title: "Dizajnerski okviri",
-    brands: ["Coco Song", "Genesis Art", "La Matta", "Oliviero Contini", "Charmant Titanium Perfection"],
+    handle: "emporio-armani-ea4237-5001t3",
+    brand: "Emporio Armani",
+    model: "EA4243 5001T3",
+    category: "suncane",
+    price: 310,
+    color: "Crna",
+    size: "56-18-145",
+    images: ["emporio-armani-ea4237-5001t3-1.jpg", "emporio-armani-ea4237-5001t3-2.jpg"],
   },
-] as const;
+  {
+    handle: "carolina-herrera-her-0186-s-80s",
+    brand: "Carolina Herrera",
+    model: "HER 0186/S 80S",
+    category: "suncane",
+    price: 289.5,
+    compareAtPrice: 579,
+    color: "Crna",
+    size: "52-22-145",
+    images: ["carolina-herrera-her-0186-s-80s-1.jpg", "carolina-herrera-her-0186-s-80s-2.jpg"],
+  },
+  {
+    handle: "chopard-354-700",
+    brand: "Chopard",
+    model: "354 700",
+    category: "suncane",
+    price: 1270,
+    color: "Crna",
+    size: "54-19-135",
+    images: ["chopard-354-700-1.jpg", "chopard-354-700-2.jpg"],
+  },
+];
+
+const byHandle = (handle: string) => {
+  const product = [...PRODUCTS, ...EXTRA_PRODUCTS].find((p) => p.handle === handle);
+  if (!product) throw new Error(`Unknown product ${handle}`);
+  return product;
+};
+
+export const HERO_PRODUCT = byHandle("prada-prb23s-16k08z");
+
+export type BrandShowcase = {
+  name: string;
+  logo: string;
+  // Intrinsic logo aspect ratio (from the SVG viewBox), used for optical sizing.
+  ratio: number;
+  product: Product;
+};
+
+// Logos: official marks as published on Wikimedia Commons (see DESIGN_NOTES.md).
+export const BRAND_SHOWCASE: BrandShowcase[] = [
+  { name: "Prada", logo: "/brands/prada.svg", ratio: 6.44, product: byHandle("prada-prd01-00k10s") },
+  { name: "Miu Miu", logo: "/brands/miu-miu.svg", ratio: 5.77, product: byHandle("miu-miu-mub05s-14l20u") },
+  { name: "Dolce&Gabbana", logo: "/brands/dolce-gabbana.svg", ratio: 2.07, product: byHandle("dolce-gabbana-dg4514-501-87") },
+  { name: "Ray-Ban", logo: "/brands/ray-ban.svg", ratio: 1.86, product: byHandle("ray-ban-rb3765-001-51") },
+  { name: "Jimmy Choo", logo: "/brands/jimmy-choo.svg", ratio: 6.98, product: byHandle("jimmy-choo-jim-leone-s-086") },
+  { name: "Emporio Armani", logo: "/brands/emporio-armani.svg", ratio: 10.48, product: byHandle("emporio-armani-ea4237-5001t3") },
+  { name: "Carolina Herrera", logo: "/brands/carolina-herrera.svg", ratio: 11.7, product: byHandle("carolina-herrera-her-0186-s-80s") },
+  { name: "Chopard", logo: "/brands/chopard.svg", ratio: 2.31, product: byHandle("chopard-354-700") },
+];
+
+// Further verified brands from the catalogue, listed as text (no logo asset used).
+export const ALSO_STOCKED = [
+  "Police",
+  "Vogue",
+  "Furla",
+  "Missoni",
+  "Coco Song",
+  "Genesis Art",
+  "La Matta",
+  "Oliviero Contini",
+  "Charmant Titanium Perfection",
+];
 
 export type Store = {
   id: string;
